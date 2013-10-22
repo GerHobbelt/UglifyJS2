@@ -3,16 +3,25 @@
     "description": "JavaScript parser, mangler/compressor and beautifier toolkit",
     "homepage": "http://lisperator.net/uglifyjs",
     "main": "tools/node.js",
-    "version": "2.2.5-patch1",
+    "version": "2.4.1",
     "engines": { "node" : ">=0.4.0" },
-    "repositories": [{
-        "type": "git",
-        "url": "https://github.com/papandreou/UglifyJS2.git"
+    "maintainers": [{
+        "name": "Mihai Bazon",
+        "email": "mihai.bazon@gmail.com",
+        "web": "http://lisperator.net/"
     }],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/mishoo/UglifyJS2.git"
+    },
     "dependencies": {
         "async"      : "~0.2.6",
         "source-map" : "~0.1.7",
-        "optimist"   : "~0.3.5"
+        "optimist"   : "~0.3.5",
+        "uglify-to-browserify": "~1.0.0"
+    },
+    "browserify": {
+        "transform": [ "uglify-to-browserify" ]
     },
     "bin": {
         "uglifyjs" : "bin/uglifyjs"
