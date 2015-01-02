@@ -359,6 +359,7 @@ As you see, you can use keyword `when`, it's like `case`, but if the condition i
 			int a = 321;
 		}
    
+<<<<<<< HEAD
    
 Future plans
 ===
@@ -631,3 +632,5 @@ Future plans
 	    	return i|0;
 		}
 		
+=======
+>>>>>>> master
