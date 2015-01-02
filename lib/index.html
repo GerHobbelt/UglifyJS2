@@ -14,6 +14,7 @@
         <script src="./translate.js"></script>
         <script src="./std.js"></script>
         <script src="./typecheck.js"></script>
+        <!--script src="./browser-cola.js"></script-->
     	<style>
     	
     	body {
@@ -80,24 +81,28 @@
             float: right;
             margin: 2px 10px;
         }
+
+        #version {
+            float: right;
+            margin: 2px 10px;
+        }
     	
     	</style>
 	</head>
 	<body class="triple">
-		<textarea id="source" onkeyup="compile()">// `main` functions may binding to a onload event 
+		<textarea id="source">// `main` functions may binding to a onload event 
 // Functions can defined without `function` keyword, with and without `type`
 main(){
 
     // Unary operators
-    // Two variants of `isset` operator. Which is better?
+    // `isset` operator.
     bool _seted = true, _empty;
-    console.log("`_seted` is", _seted?? ? "seted" : "empty");
-    console.log("`_empty` is", isset _empty ? "seted" : "empty");
+    console.log("`_seted` is", _seted? ? "seted" : "empty");
 
     // `clone` operator 
     Array _first = [584], _second = clone _first;
     _first.push(404);
-    console.log("`_first`:",_first,"`_second`:",_second);
+    console.log("`_first`:", _first, "`_second`:", _second);
 
     // Binary operators
     // `pow` operator
@@ -211,24 +216,46 @@ main();</textarea>
                 <label for="is_js">js parser</label>
                 <input type="checkbox" id="main_binding" onclick="compile()">
                 <label for="main_binding">`main` binding</label>
+                <input type="checkbox" id="is_node" onclick="compile()">
+                <label for="is_node">node</label>
                 <input type="checkbox" id="compressed" onclick="changeClass()">
                 <label for="compressed">compressed</label>
+                <span id="version">v0.8.0</span>
                 <span id="lenstat"></span>
             </div>
 	</body>
 	<script>
+        function debounce(func, wait, immediate) {
+            var timeout;
+            return function() {
+                var context = this, args = arguments;
+                var later = function() {
+                    timeout = null;
+                    if (!immediate) func.apply(context, args);
+                };
+                var callNow = immediate && !timeout;
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+                if (callNow) func.apply(context, args);
+            };
+        }; 
+
 		var sourceArea = document.getElementById("source"), 
 			translationArea = document.getElementById("translation"), 
 			resultArea = document.getElementById("result"), 
             isjs = document.getElementById("is_js"),
             mainbinding = document.getElementById("main_binding"),
+            isnode = document.getElementById("is_node"),
             compressed = document.getElementById("compressed"),
 			source;
+
+        sourceArea.onkeyup = debounce(compile, 600);
         //localStorage.clear();
         if(!localStorage.source) localStorage.source = source = sourceArea.value;
 		else sourceArea.value = source = localStorage.source;
         isjs.checked = localStorage.isjs == "t";
         mainbinding.checked = localStorage.mainbinding == "t";
+        isnode.checked = localStorage.isnode == "t";
         compressed.checked = localStorage.compressed == "t";
 
         function changeClass(){
@@ -241,6 +268,7 @@ main();</textarea>
 			localStorage.source = source;
             localStorage.isjs = isjs.checked ? "t" : "f";
             localStorage.mainbinding = mainbinding.checked ? "t" : "f";
+            localStorage.isnode = isnode.checked ? "t" : "f";
 
 			stream = new Cola.OutputStream({ beautify : true, comments : true });
 			compressor = new Cola.Compressor({ is_js : isjs.checked });
@@ -248,7 +276,7 @@ main();</textarea>
 			try {
 				// 1. compile
 				ast = Cola.parse(source, { is_js : isjs.checked });
-				if(!isjs.checked) ast = ast.toJavaScript({ main_binding : mainbinding.checked });
+				if(!isjs.checked) ast = ast.toJavaScript({ main_binding : mainbinding.checked, modules : Cola.getPackages(), is_node : isnode.checked });
 				ast.print(stream);
 				translationArea.value = stream.toString();
 

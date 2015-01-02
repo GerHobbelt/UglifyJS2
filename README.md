@@ -1,6 +1,6 @@
 ![logo](https://raw.githubusercontent.com/TrigenSoftware/ColaScript/master/colalogo.png)
 
-ColaScript is a language that compiles in JavaScript. This language is similar to Dart, CoffeeScript, Python and PHP, with some original ideas. Compiler based on [UglifyJS2](https://github.com/mishoo/UglifyJS2). You can play with language [here](http://develop.trigen.pro/cola/).
+ColaScript is a language that compiles in JavaScript. This language is similar to Dart, CoffeeScript, Python and PHP, with some original ideas. Compiler based on [UglifyJS2](https://github.com/mishoo/UglifyJS2). You can play with language [here (stable)](http://cola.trigen.pro) or [here (dev)](http://cola.trigen.pro/dev/).
 
 
 Installation
@@ -359,3 +359,278 @@ As you see, you can use keyword `when`, it's like `case`, but if the condition i
 			int a = 321;
 		}
    
+<<<<<<< HEAD
+   
+Future plans
+===
+- Use inline `isset` expression instead function. status: done
+- Use inline `is`. status: done
+- `some is NaN` to `isNaN(some)`. status: done
+- operator `?` instead `isset`. status: done
+- rename runtime prefix `$_cola` to `_ColaRuntime$$`. status: done
+- dotal names of refs: done
+
+		String String::replaceAll(a, b){
+  			String res = this;
+    		while(res.indexOf(a) != -1) res = res.replace(a, b);
+    		return res;
+		}
+		
+		// or
+		
+		Object data = someData;
+		int data.getFriendsCount() => this.friends.length;
+		
+- dotal getters and setters definition. status: done
+
+		covert int get Math.rand() => 123;
+		covert int set Math.rand(int val) => console.log(val);
+		
+		to
+		
+		_ColaRuntime$$updateProperty(Math, "rand", {
+    		get: function rand() {
+        		return 123;
+        	}
+    	});
+
+    	_ColaRuntime$$updateProperty(Math, "rand", {
+        	set: function rand() {
+          		var val = arguments[0] !== undefined ? arguments[0] : _ColaRuntime$$error("Argument `val` is required!");
+        		return console.log(val);
+    		}
+		});
+
+- operator `?.`. status: done
+- operator `?` to sign an argument as not-required. status: done
+
+		int sqr(int x) => x ** 2;
+		
+		sqr(2); // 4
+		sqr();  // Exception
+		
+		int sqrt(int x?) => x ** 2;
+		sqr();  // NaN
+
+- Negate array accessor ( getter ). status: done
+ 
+		arr[-1]; // last element
+
+	only for static negate index, for other cases you can use `%` unary prefix:
+	
+		int index = -10;
+		arr[%index] = 34; // arr[index %% arr.length];
+
+- var modificators. status: done
+
+		const int Math.Pi = 3.14;
+		
+	list of modificators
+	* static: vars, funcs, getters and setters in classes
+	* const: vars, props
+	* covert: vars, funcs, getters and setters in classes and objects, props
+	* export: vars, funcs, classes, singletones
+
+- classes. status: done
+
+		class A {
+    
+		    int a = 123;
+    		String about = "class";
+    		
+    		$("button").click(() => console.log("Button Clicked!"));
+    
+    		A(a){
+        		about = "some else";
+    		}
+    
+    		static Hello() => "hello!";
+    
+    		public String about() => about;
+		}
+
+		class B extends A {
+    
+    		B(){
+        		parent();
+        		about += "!";  
+    		}
+    
+    		B.anotherConstructor(){
+        		about = "ups!";  
+    		}
+    
+    		get some() => "some " + about;
+    		set some(val) => about += val; 
+		}
+		
+- singletones. status: done
+
+		singleton S { // in fact this is object
+    		int x = 45;
+    		String s = "txt";
+    
+    		say(some){
+        		alert(some);
+    		}
+    
+    
+		}
+
+- Compiler command `@import` to import modules ( CommonJS ), status: done
+
+		@import 'sugar'
+		@import 'fs' as fs
+		@import dirname from 'path'
+		@import print as echo, prompt as ask, test from 'mylib'
+		
+		String code = fs.readFileSync(dirname(filePath) + "/main.cola", "utf8");
+		echo("hello!");
+
+- Compiler command `@export` to export modules ( CommonJS ), status: done
+		
+		Object hash = {};
+		Array users = [];
+		
+		@export hash as _, users
+		@export each as forEach from "underscore"
+		@export "mylib"
+		
+- `async` function modificator, status: done
+
+		async GET(String url) {
+		    var xhr = new XMLHttpRequest();
+		    
+		    xhr.onreadystatechange() {
+		    	if (xhr.readyState != 4) return;
+		    	if (xhr.status == 200) resolve xhr.response;
+		    	
+		    	reject false;
+		    }
+		    
+		    xhr.open("GET", url, true);
+			xhr.send();
+		}
+		
+		to
+		
+		function GET(url) {
+			var _ColaRuntime$$arguments = arguments;
+			return new Promise(function(_ColaRuntime$$resolve, _ColaRuntime$$reject) {
+				arguments = _ColaRuntime$$arguments;
+		    	var xhr = new XMLHttpRequest();
+		    
+		    	xhr.onreadystatechange = function() {
+		    		if (xhr.readyState != 4) return;
+		    		if (xhr.status == 200) return _ColaRuntime$$resolve(xhr.response);
+		    	
+		    		return _ColaRuntime$$reject(false);
+		    	}
+		    
+		    	xhr.open("GET", url, true);
+				xhr.send();
+			}.bind(this));
+		}
+
+		
+- `await` operator (only with Promise support), status: done
+        
+        String name = await getNameFromServer(id);
+        console.log(name);
+        
+        to
+   	    
+   	    var _ColaRuntime$$arguments = arguments;
+   	    _ColaRuntime$$promise(getNameFromServer(id), function(_ColaRuntime$$fulfilled, _ColaRuntime$$rejected) {
+   	        arguments = _ColaRuntime$$arguments;
+   	    	if (_ColaRuntime$$rejected) throw _ColaRuntime$$rejected;
+   	    	String name = _ColaRuntime$$fulfilled;
+   	    	console.log(name);
+   	    }, this);
+   	    
+- `@use client` and `@use server` commands, status: done
+- control flows without braces, status: done
+- ES6 `for`, status: done
+	
+		for(name of names){
+	
+		}
+
+- static typing	
+- `@use` expressions
+		
+		@use strict closure
+			
+- interface
+
+		interface UserProfile {
+			String name, email;					
+			Date birth;
+			String info?;
+		}
+
+- classes and typing with templates
+
+		class A<T> {
+			// ...
+		}
+		
+		Array<int> arr = [0...10];
+		Object<String, String> obj = { name: "Eric" };
+		
+- write documentation of tokenizer/parser methods
+- more informative exceptions
+- better source maps
+- HTML and CSS stuff
+
+		String width = 12px;
+		String div = <div class="inline">
+			<h1>Example of Embedded HTML</h1>
+		</div>;
+		
+	by default it will parsed as `String`, but it may be handled by Plugins. 
+	
+- Plugin API to make native syntax for libraries and frameworks
+
+		class MyComponent extends PolymerComponent {
+			String tagname = "my-component";
+			
+			ready(){
+				// ...
+			}	
+		}
+		
+		to 
+		
+		Polymer('my-component', {
+      		ready: function(){ 
+      			// ...
+      		}
+     	});
+     	
+- Compiler command `@use pluginname` , pluginname must be in lower case.
+- asm.js native syntax, for example
+
+		// cola
+		// ...
+	
+		@use asm
+	
+		int f(double j){
+			int i = 1;
+			return i;
+		}
+	
+		// js
+		// ...
+	
+		"use asm";
+	
+		function f(j){
+			j = +j;
+	    	var i = 1|0;
+	    	return i|0;
+		}
+		
+=======
+>>>>>>> master
