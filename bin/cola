@@ -22,7 +22,7 @@ mangling you need to use `-c` and `-m`.\
     .describe("j", "Work with JavaScript (by default Cola will expect ColaScript).")
     .describe("n", "Enable compilation for node.")
     .describe("P", "Path to packages.json (packages.json by default).")
-    .describe("i", "ignore `main` wrapping.")
+    .describe("i", "Ignore `main` wrapping.")
     .describe("source-map", "Specify an output file where to generate source map.")
     .describe("source-map-root", "The path to the original source to be included in the source map.")
     .describe("source-map-url", "The path to the source map to be added in //# sourceMappingURL.  Defaults to the value passed with --source-map.")

@@ -1,6 +1,6 @@
 {
     "name": "cola-script",
-    "version": "0.8.0",
+    "version": "0.8.1",
     "homepage": "https://github.com/TrigenSoftware/ColaScript",
     "authors": [
         "Onoshko Dan"
@@ -15,13 +15,29 @@
     "license": "BSD",
     "ignore": [
         "**/.*",
+        ".gitignore",
+        ".travis.yml",
         "node_modules",
         "test",
         "bin",
         "tools",
-        "*.md",
+        "lib/ast.js",
+        "lib/browser.js",
+        "lib/compress.js",
+        "lib/index.html",
+        "lib/mozilla-ast.js",
+        "lib/output.js",
+        "lib/parse.js",
+        "lib/scope.js",
+        "lib/sourcemap.js",
+        "lib/std.js",
+        "lib/transform.js",
+        "lib/translate.js",
+        "lib/typecheck.js",
+        "lib/utils.js",
+        "README.md",
         "colalogo.png",
-        ".gitignore",
-        ".travis.yml"
+        "package.json",
+        "demo.cola"
     ]
 }
