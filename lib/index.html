@@ -218,6 +218,8 @@ main();</textarea>
                 <label for="main_binding">`main` binding</label>
                 <input type="checkbox" id="is_node" onclick="compile()">
                 <label for="is_node">node</label>
+                <input type="checkbox" id="is_meteor" onclick="compile()">
+                <label for="is_meteor">meteor</label>
                 <input type="checkbox" id="compressed" onclick="changeClass()">
                 <label for="compressed">compressed</label>
                 <span id="version">v0.8.0</span>
@@ -246,6 +248,7 @@ main();</textarea>
             isjs = document.getElementById("is_js"),
             mainbinding = document.getElementById("main_binding"),
             isnode = document.getElementById("is_node"),
+            ismeteor = document.getElementById("is_meteor"),
             compressed = document.getElementById("compressed"),
 			source;
 
@@ -256,6 +259,7 @@ main();</textarea>
         isjs.checked = localStorage.isjs == "t";
         mainbinding.checked = localStorage.mainbinding == "t";
         isnode.checked = localStorage.isnode == "t";
+        ismeteor.checked = localStorage.ismeteor == "t";
         compressed.checked = localStorage.compressed == "t";
 
         function changeClass(){
@@ -269,6 +273,7 @@ main();</textarea>
             localStorage.isjs = isjs.checked ? "t" : "f";
             localStorage.mainbinding = mainbinding.checked ? "t" : "f";
             localStorage.isnode = isnode.checked ? "t" : "f";
+            localStorage.ismeteor = ismeteor.checked ? "t" : "f";
 
 			stream = new Cola.OutputStream({ beautify : true, comments : true });
 			compressor = new Cola.Compressor({ is_js : isjs.checked });
@@ -276,7 +281,13 @@ main();</textarea>
 			try {
 				// 1. compile
 				ast = Cola.parse(source, { is_js : isjs.checked });
-				if(!isjs.checked) ast = ast.toJavaScript({ main_binding : mainbinding.checked, modules : Cola.getPackages(), is_node : isnode.checked });
+				if(!isjs.checked) ast = ast.toJavaScript({ 
+                    main_binding : mainbinding.checked, 
+                    modules      : Cola.getPackages(), 
+                    is_node      : isnode.checked, 
+                    is_meteor    : ismeteor.checked 
+                });
+
 				ast.print(stream);
 				translationArea.value = stream.toString();
 
