@@ -2,8 +2,13 @@
     "name": "cola-script",
     "description": "ColaScript translator / parser / mangler / compressor / beautifier toolkit",
     "homepage": "https://github.com/TrigenSoftware/ColaScript",
+    "keywords": [
+        "cola",
+        "colascript",
+        "cola-script"
+    ],
     "main": "tools/node.js",
-    "version": "0.8.2",
+    "version": "0.8.3",
     "engines": { "node" : ">=0.4.0" },
     "maintainers": [{
         "name": "Dan Onoshko (dangreen)",
