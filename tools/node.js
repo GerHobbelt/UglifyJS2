@@ -60,7 +60,7 @@ exports.translate = function(files, options) {
         compress     : {},
         is_js        : false,
         is_node      : false, 
-        modules      : {},
+        modules      : Cola.getPackages(ARGS.P),
         main_binding : true,
         path         : false
     });
