@@ -65,7 +65,7 @@ During developing is more comfortable to compile the code directly in your brows
 Now you can run your Cola-Code:
 
 ```html
-<script type="text/colascript" src="path/to/your.cola"></script
+<script type="text/colascript" src="path/to/your.cola"></script>
 ```
 	
 If `your.cola` depends on other scripts in `your.html`, it's better to notice `browser-cola` about it:
