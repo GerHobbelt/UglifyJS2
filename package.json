@@ -8,7 +8,7 @@
         "cola-script"
     ],
     "main": "tools/node.js",
-    "version": "0.8.22",
+    "version": "0.8.23",
     "engines": { "node" : ">=0.4.0" },
     "maintainers": [{
         "name": "Dan Onoshko (dangreen)",
